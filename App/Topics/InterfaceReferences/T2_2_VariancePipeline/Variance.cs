@@ -1,57 +1,64 @@
-// Topic 2: Interface References
-// Task T2.2 VariancePipeline (*)
-// Реализуйте интерфейсы с вариативностью и классы-адаптеры согласно README.
+using System;
+using System.Collections.Generic;
 
-namespace App.Topics.InterfaceReferences.T2_2_VariancePipeline;
-
-public interface IProducer<out T>
+namespace App.Topics.InterfaceReferences.T2_2_VariancePipeline
 {
-    T Produce();
-}
-
-public interface IConsumer<in T>
-{
-    void Consume(T item);
-}
-
-public class Producer<T> : IProducer<T>
-{
-    public Producer(Func<T> factory)
+    public interface IProducer<out T>
     {
-        // TODO: сохранить фабрику, проверить на null
-        throw new NotImplementedException();
+        T Produce();
     }
 
-    public T Produce()
+    public interface IConsumer<in T>
     {
-        // TODO: вернуть значение через фабрику
-        throw new NotImplementedException();
-    }
-}
-
-public class Collector<T> : IConsumer<T>
-{
-    public List<T> Items { get; } = new();
-
-    public void Consume(T item)
-    {
-        // TODO: добавить элемент в Items
-        throw new NotImplementedException();
-    }
-}
-
-public class Adapter<TFrom, TTo>
-{
-    public Adapter(IProducer<TFrom> producer, IConsumer<TTo> consumer, Func<TFrom, TTo> mapper)
-    {
-        // TODO: сохранить зависимости, проверить на null
-        throw new NotImplementedException();
+        void Consume(T item);
     }
 
-    public void Run(int count)
+    public class Producer<T> : IProducer<T>
     {
-        // TODO: если count < 0 — ArgumentOutOfRangeException
-        // count раз вызвать Produce, затем mapper, затем Consume
-        throw new NotImplementedException();
+        private readonly Func<T> _producerFunc;
+
+        public Producer(Func<T> producerFunc)
+        {
+            _producerFunc = producerFunc ?? throw new ArgumentNullException(nameof(producerFunc));
+        }
+
+        public T Produce() => _producerFunc();
+    }
+
+    public class Collector<T> : IConsumer<T>
+    {
+        public List<T> Items { get; } = new List<T>();
+
+        public void Consume(T item)
+        {
+            Items.Add(item);
+        }
+    }
+
+    public class Adapter<TIn, TOut>
+    {
+        private readonly IProducer<TIn> _producer;
+        private readonly IConsumer<TOut> _consumer;
+        private readonly Func<TIn, TOut> _adapterFunc;
+
+        public Adapter(IProducer<TIn> producer, IConsumer<TOut> consumer, Func<TIn, TOut> adapterFunc)
+        {
+            _producer = producer ?? throw new ArgumentNullException(nameof(producer));
+            _consumer = consumer ?? throw new ArgumentNullException(nameof(consumer));
+            _adapterFunc = adapterFunc ?? throw new ArgumentNullException(nameof(adapterFunc));
+        }
+
+        public void Run(int count)
+        {
+            if (count < 0)
+                throw new ArgumentOutOfRangeException(nameof(count), "Count cannot be negative");
+
+            for (int i = 0; i < count; i++)
+            {
+                var input = _producer.Produce();
+                var output = _adapterFunc(input);
+                _consumer.Consume(output);
+            }
+        }
     }
 }
