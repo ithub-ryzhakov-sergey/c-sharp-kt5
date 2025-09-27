@@ -4,4 +4,27 @@
 
 namespace App.Topics.InterfaceReferences.T2_1_ZooSpeak;
 
+interface IAnimal
+{
+    string Speak();
+}
 
+public class Dog: IAnimal {
+    public string Speak()
+    {
+        return "woof";
+    }
+}
+public class Cat: IAnimal {
+    public string Speak()
+    {
+        return "meow";
+    }
+}
+public class Duck : IAnimal
+{
+    public string Speak()
+    {
+        return "quack";
+    }
+}
