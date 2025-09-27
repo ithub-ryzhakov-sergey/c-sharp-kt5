@@ -14,7 +14,7 @@ interface IShape
 public class Rectangle: IShape {
     public double Width { get; }
     public double Height { get; }
-    public string Name { get; }
+    public string Name { get; } 
     public double Area()
     {
         return this.Width * this.Height;
