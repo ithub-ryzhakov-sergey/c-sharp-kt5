@@ -4,4 +4,5 @@
 
 namespace App.Topics.InterfaceReferences.T2_1_ZooSpeak;
 
+public interface IAnimal;
 
