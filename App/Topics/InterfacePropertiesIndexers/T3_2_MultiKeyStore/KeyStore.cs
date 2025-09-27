@@ -17,7 +17,7 @@ namespace App.Topics.InterfacePropertiesIndexers.T3_2_MultiKeyStore
         private readonly Dictionary<string, string> _keyStorage = new Dictionary<string, string>();
         private int _nextId = 0;
 
-        public int Count => _idStorage.Count;
+        public int Count => _idStorage.Count + _keyStorage.Count;
 
         public string this[int id]
         {
@@ -64,19 +64,6 @@ namespace App.Topics.InterfacePropertiesIndexers.T3_2_MultiKeyStore
                     throw new ArgumentNullException(nameof(value), "Value cannot be null, empty or whitespace");
 
                 _keyStorage[key] = value;
-
-                // Если ключ уже связан с id, обновляем значение по id
-                var existingId = _idStorage.FirstOrDefault(x => x.Value == _keyStorage[key]).Key;
-                if (existingId != 0 || _idStorage.ContainsKey(0))
-                {
-                    _idStorage[existingId] = value;
-                }
-                else
-                {
-                    // Создаем новую запись с id
-                    _idStorage[_nextId] = value;
-                    _nextId++;
-                }
             }
         }
     }
