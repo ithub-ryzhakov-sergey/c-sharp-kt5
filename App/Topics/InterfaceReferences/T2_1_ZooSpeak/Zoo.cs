@@ -4,7 +4,7 @@
 
 namespace App.Topics.InterfaceReferences.T2_1_ZooSpeak;
 
-interface IAnimal
+public interface IAnimal
 {
     string Speak();
 }
